@@ -1,0 +1,201 @@
+run:
+  go: "1.22"
+  timeout: 30m
+  tests: false
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - dogsled
+    - dupl
+    - errcheck
+    - exportloopref
+    - funlen
+    - gocognit
+    - goconst
+    - gocritic
+    - godox
+    - gofmt
+    - goimports
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - revive
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+    - nolintlint
+    - containedctx
+    - durationcheck
+    - errname
+    - errorlint
+    - prealloc
+
+linters-settings:
+  # gosec:
+  # excludes:
+  #   - "G104"
+
+  funlen:
+    lines: 60
+    statements: 40
+
+  # govet:
+  # enable:
+  #   - atomicalign
+  # enable-all: false
+  # disable:
+  #   - shadow
+  # disable-all: false
+  # settings per analyzer
+  # enable:
+  #   - shadow
+  # settings:
+  # printf: # analyzer name, run `go tool vet help` to see all analyzers
+  #   funcs: # run `go tool vet help printf` to see available settings for `printf` analyzer
+  #     - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+  #     - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+  #     - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+  #     - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+  # shadow:
+  #   strict: false
+  revive:
+    rules:
+      # Disable exported function and methods should have comments.
+      - name: exported
+        disabled: true
+      - name: argument-limit
+        arguments: [4]
+      - name: atomic
+        disabled: false
+      - name: blank-imports
+        disabled: false
+      - name: confusing-naming
+        disabled: false
+      - name: confusing-results
+        disabled: false
+      - name: constant-logical-expr
+        disabled: false
+      - name: context-keys-type
+        disabled: false
+      - name: duplicated-imports
+        disabled: false
+      - name: empty-block
+        disabled: false
+      - name: error-return
+        disabled: false
+      - name: function-result-limit
+        disabled: false
+        arguments: [3]
+      - name: identical-branches
+        disabled: false
+      - name: nested-structs
+        disabled: false
+      - name: range-val-in-closure
+        disabled: false
+      - name: range-val-address
+        disabled: false
+      - name: redefines-builtin-id
+        disabled: false
+      - name: string-of-int
+        disabled: false
+      - name: superfluous-else
+        disabled: false
+      - name: time-equal
+        disabled: false
+      - name: time-naming
+        disabled: false
+      - name: unnecessary-stmt
+        disabled: false
+      - name: unused-receiver
+        disabled: false
+      - name: unreachable-code
+        disabled: false
+      - name: waitgroup-by-value
+        disabled: false
+  goconst:
+    # minimal length of string constant, 3 by default
+    min-len: 3
+    # minimal occurrences count to trigger, 3 by default
+    min-occurrences: 3
+  misspell:
+    # Correct spellings using locale preferences for US or UK.
+    # Default is to use a neutral variety of English.
+    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+    locale: US
+  nakedret:
+    # make an issue if func has more lines of code than this setting and it has naked returns; default is 30
+    max-func-lines: 1
+  godox:
+    keywords: # default keywords are TODO, BUG, and FIXME,
+      - TODO
+      - BUG
+      - FIXME
+      - OPTIMIZE
+      - HACK
+  whitespace:
+    multi-if: false # Enforces newlines (or comments) after every multi-line if statement
+    multi-func: false # Enforces newlines (or comments) after every multi-line function signature
+  stylecheck:
+    checks: # https://staticcheck.io/docs/options#checks
+      - "all"
+      - "-ST1000"
+      # - "-ST1003"
+      # - "-ST1005"
+
+issues:
+  # List of regexps of issue texts to exclude, empty list by default.
+  # But independently from this option we use default exclude patterns,
+  # it can be disabled by `exclude-use-default: false`. To list all
+  # excluded by default patterns execute `golangci-lint run --help`
+  # exclude:
+  #   - abcdef
+
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - funlen
+        - containedctx
+
+    # Exclude known linters from partially hard-vendored code,
+    # which is impossible to exclude via "nolint" comments.
+    # - path: internal/hmac/
+    #   text: "weak cryptographic primitive"
+    #   linters:
+    #     - gosec
+
+    # Exclude some staticcheck messages
+    # - linters:
+    #     - staticcheck
+    #   text: "SA9003:"
+
+    # Exclude lll issues for long lines with go:generate
+    - linters:
+        - lll
+      source: "^//go:generate "
+
+  # Independently from option `exclude` we use default exclude patterns,
+  # it can be disabled by this option. To list all
+  # excluded by default patterns execute `golangci-lint run --help`.
+  # Default value for this option is true.
+  exclude-use-default: false
+
+  # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  max-same-issues: 0
