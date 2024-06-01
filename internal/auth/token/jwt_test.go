@@ -42,7 +42,7 @@ func TestNewJWTMaker(t *testing.T) {
 	}
 }
 
-func TestCreateToken(t *testing.T) {
+func TestJwtMakerMake(t *testing.T) {
 	maker, err := NewJWTMaker(utils.RandomString(32), time.Minute)
 	require.NoError(t, err)
 
@@ -54,7 +54,7 @@ func TestCreateToken(t *testing.T) {
 		userID := utils.RandomString(10)
 		userEmail := utils.RandomString(10)
 
-		token, err := maker.CreateToken(userID, userEmail)
+		token, err := maker.Make(userID, userEmail)
 		require.NoError(t, err)
 		require.NotEmpty(t, token)
 
@@ -74,7 +74,7 @@ func TestCreateToken(t *testing.T) {
 		userID := ""
 		userEmail := utils.RandomString(10)
 
-		token, err := maker.CreateToken(userID, userEmail)
+		token, err := maker.Make(userID, userEmail)
 		require.Error(t, err)
 		require.Empty(t, token)
 	})
@@ -87,7 +87,7 @@ func TestCreateToken(t *testing.T) {
 		issuedAt := time.Now()
 		expiredAt := issuedAt.Add(duration)
 
-		token, err := maker.CreateToken(userID, userEmail)
+		token, err := maker.Make(userID, userEmail)
 		require.NoError(t, err)
 		require.NotEmpty(t, token)
 
@@ -112,7 +112,7 @@ func TestCreateToken(t *testing.T) {
 		maker, err = NewJWTMaker(utils.RandomString(secretKeyMinLength), duration)
 		require.NoError(t, err)
 
-		token, err := maker.CreateToken(userName, userEmail)
+		token, err := maker.Make(userName, userEmail)
 		require.NoError(t, err)
 		require.NotEmpty(t, token)
 

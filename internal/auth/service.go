@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 
+	"github.com/dmsbyg/auth-service-demo/internal/auth/token"
 	"github.com/dmsbyg/auth-service-demo/internal/common"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -10,10 +11,14 @@ import (
 
 type service struct {
 	repository Repository
+	tokenMaker token.Maker
 }
 
-func NewService(repository Repository) Service {
-	return &service{repository: repository}
+func NewService(repository Repository, tokenMaker token.Maker) Service {
+	return &service{
+		repository: repository,
+		tokenMaker: tokenMaker,
+	}
 }
 
 func (s *service) Register(ctx context.Context, email string, password []byte) (token string, err error) {
@@ -27,7 +32,10 @@ func (s *service) Register(ctx context.Context, email string, password []byte) (
 		return "", err
 	}
 
-	token = "some-generated-token" // TODO: generate token
+	token, err = s.tokenMaker.Make(uuid.String(), email)
+	if err != nil {
+		return "", err
+	}
 
 	return token, err
 }

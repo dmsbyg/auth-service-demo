@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	secretKeyMinLength = 32
+	secretKeyMinLength = 10
 )
 
 var ErrKeyTooShort = fmt.Errorf("token shall be minimum %d characters long", secretKeyMinLength)
@@ -36,8 +36,8 @@ type jwtMaker struct {
 	tokenDuration time.Duration
 }
 
-// CreateToken creates a new jwt token for a specific userID & userEmail
-func (j jwtMaker) CreateToken(userID, userEmail string) (string, error) {
+// Make creates a new jwt token for a specific userID & userEmail
+func (j jwtMaker) Make(userID, userEmail string) (tokenString string, err error) {
 	if userID == "" || userEmail == "" {
 		return "", errors.New("user ID or user email cannot be empty")
 	}

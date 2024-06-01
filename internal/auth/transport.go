@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/dmsbyg/auth-service-demo/internal/common"
+	"github.com/dmsbyg/auth-service-demo/pkg/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -16,6 +17,9 @@ func NewHttpHandler(s Service) http.Handler {
 	v1 := e.Group("/v1")
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
+	e.Validator = validator.New()
+
 	authRoute := v1.Group("/auth")
 	authRoute.POST("/register", h.HandleRegister)
 	authRoute.POST("/login", h.HandleLogin)
@@ -28,7 +32,15 @@ type handler struct {
 
 func (h handler) HandleRegister(c echo.Context) error {
 	var req RegisterRequest
-	token, err := h.service.Register(c.Request().Context(), req.Email, req.Password)
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+	}
+
+	token, err := h.service.Register(c.Request().Context(), req.Email, []byte(req.Password))
 	if err != nil {
 		var duplicateErr common.DuplicateError
 		if errors.As(err, &duplicateErr) {

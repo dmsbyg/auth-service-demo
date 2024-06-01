@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/dmsbyg/auth-service-demo/database"
 	"github.com/dmsbyg/auth-service-demo/internal/auth"
+	"github.com/dmsbyg/auth-service-demo/internal/auth/token"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -19,8 +21,17 @@ func main() {
 		log.Panic(err)
 	}
 
+	tokenDuration, err := time.ParseDuration(os.Getenv("JWT_TOKEN_DURATION"))
+	if err != nil {
+		log.Panic(err)
+	}
+
+	jwtMaker, err := token.NewJWTMaker(os.Getenv("JWT_SECRET"), tokenDuration)
+	if err != nil {
+		log.Panic(err)
+	}
 	repo := auth.NewRepository(db)
-	service := auth.NewService(repo)
+	service := auth.NewService(repo, jwtMaker)
 	httpHandler := auth.NewHttpHandler(service)
 
 	port, err := strconv.Atoi(os.Getenv("PORT"))
