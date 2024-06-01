@@ -8,6 +8,6 @@ type Service interface {
 }
 
 type Repository interface {
-	CreateUser(ctx context.Context, email string, hashedPassword []byte) (token string, err error)
+	CreateUser(ctx context.Context, uuid, email string, hashedPassword []byte) (err error)
 	GetUserByEmail(ctx context.Context, email string) (user User, err error)
 }

@@ -15,7 +15,7 @@ func NewRepository(db *sql.DB) Repository {
 	}
 }
 
-func (r *repository) CreateUser(ctx context.Context, email string, hashedPassword []byte) (token string, err error) {
+func (r *repository) CreateUser(ctx context.Context, uuid, email string, hashedPassword []byte) (err error) {
 	panic("not implemented") // TODO: Implement
 }
 
