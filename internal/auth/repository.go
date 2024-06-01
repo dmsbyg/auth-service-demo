@@ -20,7 +20,7 @@ func NewRepository(db *sql.DB) Repository {
 }
 
 func (r *repository) CreateUser(ctx context.Context, id, email string, hashedPassword []byte) (err error) {
-	stmt, err := r.db.PrepareContext(ctx, "INSERT INTO user(user_id, email, password) VALUES(?, ?, ?)")
+	stmt, err := r.db.PrepareContext(ctx, "INSERT INTO users(id, email, password) VALUES(?, ?, ?)")
 	if err != nil {
 		return err
 	}
