@@ -21,6 +21,7 @@ func NewHttpHandler(s Service) http.Handler {
 	e.Validator = validator.New()
 
 	authRoute := v1.Group("/auth")
+	authRoute.POST("/health", h.HandleHealth)
 	authRoute.POST("/register", h.HandleRegister)
 	authRoute.POST("/login", h.HandleLogin)
 	return e
@@ -28,6 +29,10 @@ func NewHttpHandler(s Service) http.Handler {
 
 type handler struct {
 	service Service
+}
+
+func (h handler) HandleHealth(c echo.Context) error {
+	return c.JSON(http.StatusOK, map[string]interface{}{"message": "ok"})
 }
 
 func (h handler) HandleRegister(c echo.Context) error {
