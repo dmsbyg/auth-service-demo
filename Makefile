@@ -10,7 +10,7 @@ run:
 
 test:
 	@echo "Testing..."
-	@go test ./tests -v
+	@go test ./... -v
 
 clean:
 	@echo "Cleaning..."
