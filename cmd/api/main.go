@@ -13,7 +13,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() { //nolint
+func main() {
 	db, err := database.NewSQLConnection()
 	if err != nil {
 		log.Panic(err)
