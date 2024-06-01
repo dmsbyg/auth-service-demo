@@ -1,8 +1,8 @@
+include .env
 all: build
 
 build:
 	@echo "Building..."
-	
 	@go build -o main cmd/api/main.go
 
 run:
@@ -32,4 +32,22 @@ watch:
 	    fi; \
 	fi
 
-.PHONY: all build run test clean
+new_migration:
+	@if command -v migrate > /dev/null; then \
+		echo "migrating"; \
+		migrate create -ext sql -dir ./database/migrations -seq $@; \
+	else \
+		echo "golang-migrate is not installed on your machine. You can install it referring to this instruction: https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md"; \
+	fi
+
+migrateup:
+	@echo "Migrating..."
+	@go run cmd/migrate/main.go
+
+drop_db:
+	@echo "Dropping database..."
+
+	@rm $(DB_URL)
+
+.PHONY: all build run test clean new_migration migrateup drop_db
+
