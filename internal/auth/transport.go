@@ -33,7 +33,7 @@ type handler struct {
 func (h handler) HandleRegister(c echo.Context) error {
 	var req RegisterRequest
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: "bad request"})
 	}
 
 	if err := c.Validate(&req); err != nil {
@@ -52,7 +52,7 @@ func (h handler) HandleRegister(c echo.Context) error {
 			)
 		}
 		if errors.As(err, &common.InternalAppError{}) {
-			return c.JSON(http.StatusUnprocessableEntity, ErrorResponse{err.Error()})
+			return c.JSON(http.StatusInternalServerError, ErrorResponse{err.Error()})
 		}
 
 		return c.JSON(http.StatusInternalServerError, ErrorResponse{"internal server error"})
@@ -62,5 +62,23 @@ func (h handler) HandleRegister(c echo.Context) error {
 }
 
 func (h handler) HandleLogin(c echo.Context) error {
-	return c.JSON(http.StatusInternalServerError, "register is not implemented yet!")
+	var req LoginRequest
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+	}
+
+	res, err := h.service.Login(c.Request().Context(), req.Email, []byte(req.Password))
+	if err != nil {
+		if errors.Is(err, common.ErrUnauthorized) {
+			return c.JSON(http.StatusUnauthorized, ErrorResponse{Error: "email or password is incorrect"})
+		}
+		if errors.As(err, &common.InternalAppError{}) {
+			return c.JSON(http.StatusInternalServerError, ErrorResponse{err.Error()})
+		}
+
+		return c.JSON(http.StatusUnprocessableEntity, ErrorResponse{Error: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, LoginResponse{Token: res})
 }

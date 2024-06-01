@@ -1,18 +1,19 @@
 package database
 
 import (
-	"database/sql"
 	"os"
+
+	"github.com/jmoiron/sqlx"
 )
 
-var dbInstance *sql.DB
+var dbInstance *sqlx.DB
 
-func NewSQLConnection() (db *sql.DB, err error) {
+func NewSQLConnection() (db *sqlx.DB, err error) {
 	if dbInstance != nil {
 		return db, nil
 	}
 
-	db, err = sql.Open("sqlite3", os.Getenv("DB_URL"))
+	db, err = sqlx.Open("sqlite3", os.Getenv("DB_URL"))
 	if err != nil {
 		return nil, err
 	}

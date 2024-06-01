@@ -6,14 +6,15 @@ import (
 	"errors"
 
 	"github.com/dmsbyg/auth-service-demo/internal/common"
+	"github.com/jmoiron/sqlx"
 	"github.com/mattn/go-sqlite3"
 )
 
 type repository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewRepository(db *sql.DB) Repository {
+func NewRepository(db *sqlx.DB) Repository {
 	return &repository{
 		db: db,
 	}
@@ -34,7 +35,17 @@ func (r *repository) CreateUser(ctx context.Context, id, email string, hashedPas
 }
 
 func (r *repository) GetUserByEmail(ctx context.Context, email string) (user User, err error) {
-	panic("not implemented") // TODO: Implement
+	stmt, err := r.db.PreparexContext(ctx, "SELECT * FROM users WHERE email = ?")
+	if err != nil {
+		return User{}, wrapError(err)
+	}
+
+	rows := stmt.QueryRowxContext(ctx, email)
+	if err := rows.StructScan(&user); err != nil {
+		return User{}, wrapError(err)
+	}
+
+	return user, nil
 }
 
 func wrapError(err error) error {
@@ -43,6 +54,10 @@ func wrapError(err error) error {
 		if sqlite3Err.ExtendedCode == sqlite3.ErrConstraintUnique {
 			return common.DuplicateError{Entity: "email"} // TODO: how to extract entity name from error
 		}
+	}
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return common.ErrResourceNotFound
 	}
 
 	return err

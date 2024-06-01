@@ -7,6 +7,7 @@ import (
 
 var (
 	ErrUnauthorized       error = errors.New("unauthorized")
+	ErrResourceNotFound   error = errors.New("resource not found")
 	ErrInvalidCredentials error = errors.New("email or password are incorrect")
 )
 
