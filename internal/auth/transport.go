@@ -70,7 +70,7 @@ func (h handler) HandleLogin(c echo.Context) error {
 	var req LoginRequest
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: "bad request"})
 	}
 
 	res, err := h.service.Login(c.Request().Context(), req.Email, []byte(req.Password))
