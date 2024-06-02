@@ -49,5 +49,12 @@ drop_db:
 
 	@rm $(DB_URL)
 
-.PHONY: all build run test clean new_migration migrateup drop_db
+docker_build:
+	@docker build -t auth-service-demo .
+
+docker_run:
+	@echo "Running app from docker"
+	@docker run -p 8081:8081 --rm -it auth-service-demo
+
+.PHONY: all build run test clean new_migration migrateup drop_db docker_build docker_run
 
