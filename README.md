@@ -1,11 +1,4 @@
-RESTful API service for the sign up & login. Written using Golang / Typescript.
-
-- Must include any kind tests (unit test / postman test / integration test)
-- Code must be uploaded to Github along with a README that has
-- Details on the structure of the service
-- Instructions on how to run the service
-- [Bonus] Include deployment, linting etc to your code. Mention what you added in
-
+# Auth Service Demo
 ## Overview
 
 RESTful API service for authentication.
@@ -15,7 +8,7 @@ It provides JSON over HTTP protocol for communication from client.
 In this demo it uses SQLite as database for the ease of deployment.
 It might be replaced with other database by changing the implementation of database connection and repository layer.
 
-Unit test is not written for logic part of the code. While the end-to-end test is done through Postman. 
+Unit test is not written for logic part of the code. While the end-to-end test is done through [Bruno](https://www.usebruno.com/). 
 
 ## Code Structure
 
@@ -64,10 +57,16 @@ make docker_build
 and run it with:
 ```bash
 make docker_run
+
+
+If you want to run this application directly, you can build it by running:
+```bash
+make migrateup
+make build
+./main 
 ```
-
-
 ## Tools
 
 - [golang-migrate](https://github.com/golang-migrate/migrate): golang-migrate is used to generate migration script and do migration and rollback to the database schema.
 - [air](https://github.com/cosmtrek/air): air is used to hot reloading the application. It is a nice to have package, but it makes the development experience better.
+- [bruno](https://www.usebruno.com/): bruno is postman alternative that I use to test the API.

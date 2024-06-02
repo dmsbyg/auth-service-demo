@@ -1,0 +1,458 @@
+{
+  "name": "auth-service-demo",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "login (+)",
+      "seq": 7,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/login",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"test3@mail.com\",\n  \"password\": \"123123123\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.body.token",
+            "value": "isDefined",
+            "enabled": true,
+            "uid": "PpRC3lGV2zZSoK95aFOZl"
+          },
+          {
+            "name": "res.status",
+            "value": "eq 200",
+            "enabled": true,
+            "uid": "iKlbqMvSNzFZE0Qb60OSQ"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "login (-) incorrect password",
+      "seq": 9,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/login",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"test3@mail.com\",\n  \"password\": \"stringwhichisnotcorrect\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 401",
+            "enabled": true,
+            "uid": "Y0USwM0lCddNukZEbIGo2"
+          },
+          {
+            "name": "res.body.error",
+            "value": "eq email or password is incorrect",
+            "enabled": true,
+            "uid": "Sk5gqgSTTMiQg70vV5QPa"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "login (-) email not found",
+      "seq": 8,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/login",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"not-registered-one@mail.com\",\n  \"password\": \"123123123\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 401",
+            "enabled": true,
+            "uid": "fHLvHkZv2VNPj2yoO1h5Y"
+          },
+          {
+            "name": "res.body.error",
+            "value": "isDefined",
+            "enabled": true,
+            "uid": "NRYYy5IdDLOKqkNuwzmaa"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "register (+)",
+      "seq": 2,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/register",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"tesasdft@mail.com\",\n  \"password\": \"123123123\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq created",
+            "enabled": true,
+            "uid": "rwRJcM9eRY9tqpVu2DjIB"
+          },
+          {
+            "name": "res.body.token",
+            "value": "isDefined",
+            "enabled": true,
+            "uid": "KG8BUM2yEe0ZUgGPr3m6J"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "register (-) invalid email",
+      "seq": 6,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/register",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"testmail.com\",\n  \"password\": \"asdfasdfasdf\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 400",
+            "enabled": true,
+            "uid": "PuviUgThZZ9iTHpIajcxY"
+          },
+          {
+            "name": "res.body.error",
+            "value": "contains valid",
+            "enabled": true,
+            "uid": "75yVjhyVdc560ZPun88zA"
+          },
+          {
+            "name": "res.body.error",
+            "value": "contains Email",
+            "enabled": true,
+            "uid": "HVtJAO0UHmGBh0W1GbW0l"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "register (-) invalid json body",
+      "seq": 5,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/register",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"test@mail.com\"\n  \"password\": \"\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 400",
+            "enabled": true,
+            "uid": "LAiV6wNieRuRvrTOoKub4"
+          },
+          {
+            "name": "res.body.error",
+            "value": "eq bad request",
+            "enabled": true,
+            "uid": "j0YXSdyYt3ur7KzHg81vK"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "register (-) no email given",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:8082/v1/auth/register",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"test@mail.com\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 400",
+            "enabled": true,
+            "uid": "d3hCpWzdAN0EGvRAOCxGF"
+          },
+          {
+            "name": "res.body.error",
+            "value": "eq 'Password' field is required",
+            "enabled": true,
+            "uid": "rbhrxSkZQYEzXhqLZaUk1"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "register (-) no email",
+      "seq": 3,
+      "request": {
+        "url": "http://localhost:8082/v1/auth/register",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"\",\n  \"password\": \"test@mail.com\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 400",
+            "enabled": true,
+            "uid": "7zelnIFjhi5mEZ8O1htzH"
+          },
+          {
+            "name": "res.body.error",
+            "value": "eq 'Email' field is required",
+            "enabled": true,
+            "uid": "H2StBEitvW3sFkHfRPziP"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "login (-) no email given",
+      "seq": 10,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/login",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"password\": \"stringwhichisnotcorrect\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 400",
+            "enabled": true,
+            "uid": "FnimlETGycT4uBdytQHXJ"
+          },
+          {
+            "name": "res.body.error",
+            "value": "contains Email",
+            "enabled": true,
+            "uid": "Wc8DcZOC48r2xJ9ppYLYo"
+          },
+          {
+            "name": "res.body.error",
+            "value": "contains required",
+            "enabled": true,
+            "uid": "WvKcqEg3Var98mfhfJcra"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "login (-) no password given",
+      "seq": 11,
+      "request": {
+        "url": "{{baseURL}}/v1/auth/login",
+        "method": "POST",
+        "headers": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"example@mail.com\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [
+          {
+            "name": "res.status",
+            "value": "eq 400",
+            "enabled": true,
+            "uid": "ueX9iXb9Yti5QUfeEaw09"
+          },
+          {
+            "name": "res.body.error",
+            "value": "contains Password",
+            "enabled": true,
+            "uid": "7jUlQaCfGXuewNWoBYDMG"
+          },
+          {
+            "name": "res.body.error",
+            "value": "contains required",
+            "enabled": true,
+            "uid": "EObY53ceaaPezrBVg9Fu6"
+          }
+        ],
+        "tests": "",
+        "auth": {
+          "mode": "basic",
+          "basic": {
+            "username": "test@mail.com",
+            "password": "123"
+          }
+        },
+        "query": []
+      }
+    }
+  ],
+  "activeEnvironmentUid": "1Lj9rDrBOpDX1uW3Ljbkq",
+  "environments": [
+    {
+      "variables": [
+        {
+          "name": "baseURL",
+          "value": "http://localhost:8081",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        }
+      ],
+      "name": "auth-service-demo"
+    }
+  ],
+  "brunoConfig": {
+    "version": "1",
+    "name": "auth-service-demo",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}

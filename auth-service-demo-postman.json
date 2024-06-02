@@ -1,0 +1,199 @@
+{
+  "info": {
+    "name": "auth-service-demo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "login (+)",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test3@mail.com\",\n  \"password\": \"123123123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "login (-) incorrect password",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test3@mail.com\",\n  \"password\": \"stringwhichisnotcorrect\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "login (-) email not found",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"not-registered-one@mail.com\",\n  \"password\": \"123123123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "register (+)",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"tesasdft@mail.com\",\n  \"password\": \"123123123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "register (-) invalid email",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"testmail.com\",\n  \"password\": \"asdfasdfasdf\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "register (-) invalid json body",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@mail.com\"\n  \"password\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "register (-) no email given",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "http://localhost:8082/v1/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@mail.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "register (-) no email",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "http://localhost:8082/v1/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"\",\n  \"password\": \"test@mail.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "bruno",
+      "event": []
+    },
+    {
+      "name": "login (-) no email given",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"password\": \"stringwhichisnotcorrect\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "login (-) no password given",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseURL}}/v1/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"example@mail.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
