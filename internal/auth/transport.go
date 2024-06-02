@@ -11,12 +11,13 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewHttpHandler(s Service) http.Handler {
+func NewHTTPHandler(s Service) http.Handler {
 	h := handler{s}
 	e := echo.New()
 	v1 := e.Group("/v1")
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.RequestID())
 
 	e.Validator = validator.New()
 
@@ -31,7 +32,7 @@ type handler struct {
 	service Service
 }
 
-func (h handler) HandleHealth(c echo.Context) error {
+func (handler) HandleHealth(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{"message": "ok"})
 }
 

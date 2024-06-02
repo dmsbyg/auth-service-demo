@@ -9,8 +9,6 @@ import (
 	"github.com/dmsbyg/auth-service-demo/pkg/logger"
 )
 
-var config *Config
-
 type Config struct {
 	Port             int           `mapstructure:"PORT"`
 	AppEnv           string        `mapstructure:"APP_ENV"`

@@ -35,7 +35,7 @@ func main() {
 	}
 	repo := auth.NewRepository(db, &l)
 	service := auth.NewService(repo, jwtMaker, &l)
-	httpHandler := auth.NewHttpHandler(service)
+	httpHandler := auth.NewHTTPHandler(service)
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", config.Port),
