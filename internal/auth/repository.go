@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/dmsbyg/auth-service-demo/internal/common"
+	"github.com/dmsbyg/auth-service-demo/utils"
 	"github.com/jmoiron/sqlx"
 	"github.com/mattn/go-sqlite3"
 )
@@ -52,7 +53,7 @@ func wrapError(err error) error {
 	var sqlite3Err sqlite3.Error
 	if errors.As(err, &sqlite3Err) {
 		if sqlite3Err.ExtendedCode == sqlite3.ErrConstraintUnique {
-			return common.DuplicateError{Entity: "email"} // TODO: how to extract entity name from error
+			return common.DuplicateError{Entity: utils.GetDuplicateColumnName(sqlite3Err)}
 		}
 	}
 

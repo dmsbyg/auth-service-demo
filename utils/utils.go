@@ -3,6 +3,8 @@ package utils
 import (
 	"math/rand"
 	"strings"
+
+	"github.com/mattn/go-sqlite3"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -13,9 +15,16 @@ func RandomString(n int) string {
 	k := len(alphabet)
 
 	for i := 0; i < n; i++ {
-		c := alphabet[rand.Intn(k)]
+		c := alphabet[rand.Intn(k)] //nolint:gosec // only used for testing utils
 		sb.WriteByte(c)
 	}
 
 	return sb.String()
+}
+
+func GetDuplicateColumnName(err sqlite3.Error) string {
+	s := strings.Split(err.Error(), ":")
+	sqlIdentifier := strings.Split(s[len(s)-1], ".")
+
+	return sqlIdentifier[len(sqlIdentifier)-1]
 }

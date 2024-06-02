@@ -16,7 +16,7 @@ type InternalAppError struct {
 	Err error
 }
 
-func (i InternalAppError) Error() string {
+func (InternalAppError) Error() string {
 	return "internal app error"
 }
 
