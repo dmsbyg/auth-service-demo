@@ -8,11 +8,13 @@ It provides JSON over HTTP protocol for communication from client.
 In this demo it uses SQLite as database for the ease of deployment.
 It might be replaced with other database by changing the implementation of database connection and repository layer.
 
-Unit test is not written for logic part of the code. While the end-to-end test is done through [Bruno](https://www.usebruno.com/). 
+Unit test is not written for logic part of the code. While the end-to-end test is done through [Bruno](https://www.usebruno.com/).
 
 ## Code Structure
 
 The code is structured as follow
+
+```
 .
 ├── cmd //cmd is entry points for application.
 │   ├── api // our main api service entry point.
@@ -38,6 +40,7 @@ The code is structured as follow
 │  └── validator 
 └── utils // general utility functions goes here
 
+```
 
 ## Configuration
 
@@ -57,7 +60,7 @@ make docker_build
 and run it with:
 ```bash
 make docker_run
-
+```
 
 If you want to run this application directly, you can build it by running:
 ```bash
