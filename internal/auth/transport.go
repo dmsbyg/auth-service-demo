@@ -74,6 +74,10 @@ func (h handler) HandleLogin(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: "bad request"})
 	}
 
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+	}
+
 	res, err := h.service.Login(c.Request().Context(), req.Email, []byte(req.Password))
 	if err != nil {
 		if errors.Is(err, common.ErrUnauthorized) {
