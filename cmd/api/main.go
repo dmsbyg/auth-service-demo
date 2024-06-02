@@ -1,13 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
 
+	"github.com/dmsbyg/auth-service-demo/config"
 	"github.com/dmsbyg/auth-service-demo/database"
 	"github.com/dmsbyg/auth-service-demo/internal/auth"
 	"github.com/dmsbyg/auth-service-demo/internal/auth/token"
@@ -16,17 +16,13 @@ import (
 )
 
 func main() {
-	db, err := database.NewSQLConnection()
+	config := config.New()
+	db, err := database.NewSQLConnection(config)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	tokenDuration, err := time.ParseDuration(os.Getenv("JWT_TOKEN_DURATION"))
-	if err != nil {
-		log.Panic(err)
-	}
-
-	jwtMaker, err := token.NewJWTMaker(os.Getenv("JWT_SECRET"), tokenDuration)
+	jwtMaker, err := token.NewJWTMaker(config.JWTSecret, config.JwtTokenDuration)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -34,18 +30,15 @@ func main() {
 	service := auth.NewService(repo, jwtMaker)
 	httpHandler := auth.NewHttpHandler(service)
 
-	port, err := strconv.Atoi(os.Getenv("PORT"))
-	if err != nil {
-		log.Panicf("incorrect port config: %s", err)
-	}
-
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", port),
-		Handler: httpHandler,
+		Addr:         fmt.Sprintf(":%d", config.Port),
+		Handler:      httpHandler,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 15 * time.Second,
 	}
 
 	err = server.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Panicf("cannot start server: %s", err)
 	}
 }

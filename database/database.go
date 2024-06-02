@@ -1,19 +1,18 @@
 package database
 
 import (
-	"os"
-
+	"github.com/dmsbyg/auth-service-demo/config"
 	"github.com/jmoiron/sqlx"
 )
 
 var dbInstance *sqlx.DB
 
-func NewSQLConnection() (db *sqlx.DB, err error) {
+func NewSQLConnection(config *config.Config) (db *sqlx.DB, err error) {
 	if dbInstance != nil {
 		return db, nil
 	}
 
-	db, err = sqlx.Open("sqlite3", os.Getenv("DB_URL"))
+	db, err = sqlx.Open("sqlite3", config.DBUrl)
 	if err != nil {
 		return nil, err
 	}
