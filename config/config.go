@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/dmsbyg/auth-service-demo/pkg/logger"
 )
 
 var config *Config
@@ -15,6 +17,8 @@ type Config struct {
 	DBUrl            string        `mapstructure:"DB_URL"`
 	JWTSecret        string        `mapstructure:"JWT_SECRET"`
 	JwtTokenDuration time.Duration `mapstructure:"JWT_TOKEN_DURATION"`
+
+	LoggerConfig logger.Config
 }
 
 func New() *Config {
@@ -41,6 +45,18 @@ func New() *Config {
 			cfg.JwtTokenDuration = duration
 		}
 	}
+	if val := getenv("LOG_LEVEL"); val != "" {
+		cfg.LoggerConfig.LogLevel = val
+	}
+	if val := getenv("LOG_ENCODING"); val != "" {
+		cfg.LoggerConfig.LogEncoding = val
+	}
+	if val := getenv("LOG_OUTPUT"); val != "" {
+		cfg.LoggerConfig.LogOutput = val
+	}
+	if val := getenv("LOG_ERROR_OUTPUT"); val != "" {
+		cfg.LoggerConfig.LogErrorOutput = val
+	}
 
 	return cfg
 }
@@ -52,6 +68,12 @@ func newDefaultConfig() *Config {
 		DBUrl:            "./test.db",
 		JWTSecret:        "jwtsecretwhichhasenoughcharacters",
 		JwtTokenDuration: 1 * time.Hour,
+		LoggerConfig: logger.Config{
+			LogLevel:       "error",
+			LogEncoding:    "console",
+			LogOutput:      "stdout",
+			LogErrorOutput: "stderr",
+		},
 	}
 }
 

@@ -13,14 +13,15 @@ import (
 
 func main() {
 	dbURL := os.Getenv("DB_URL")
-	log.Println("migrating to dbURL", dbURL)
+	if dbURL == "" {
+		log.Panic("DB_URL is not set, plese check your environment variables")
+	}
 	db, err := sql.Open("sqlite3", dbURL)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	log.Println("db:", db)
-	defer db.Close()
+	defer db.Close() //nolint
 	instance, err := sqlite3.WithInstance(db, &sqlite3.Config{})
 	if err != nil {
 		log.Panic(err)

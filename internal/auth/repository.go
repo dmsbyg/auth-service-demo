@@ -6,29 +6,35 @@ import (
 	"errors"
 
 	"github.com/dmsbyg/auth-service-demo/internal/common"
+	"github.com/dmsbyg/auth-service-demo/pkg/logger"
 	"github.com/dmsbyg/auth-service-demo/utils"
 	"github.com/jmoiron/sqlx"
 	"github.com/mattn/go-sqlite3"
 )
 
 type repository struct {
-	db *sqlx.DB
+	db     *sqlx.DB
+	logger logger.Logger
 }
 
-func NewRepository(db *sqlx.DB) Repository {
+func NewRepository(db *sqlx.DB, l logger.Logger) Repository {
 	return &repository{
-		db: db,
+		db:     db,
+		logger: l,
 	}
 }
 
 func (r *repository) CreateUser(ctx context.Context, id, email string, hashedPassword []byte) (err error) {
 	stmt, err := r.db.PrepareContext(ctx, "INSERT INTO users(id, email, password) VALUES(?, ?, ?)")
 	if err != nil {
+		r.logger.Errorf("prepare context error: %w", err)
+
 		return err
 	}
 
 	_, err = stmt.ExecContext(ctx, id, email, hashedPassword)
 	if err != nil {
+		r.logger.Errorf("exec context error: %w", err)
 		return wrapError(err)
 	}
 
@@ -38,11 +44,13 @@ func (r *repository) CreateUser(ctx context.Context, id, email string, hashedPas
 func (r *repository) GetUserByEmail(ctx context.Context, email string) (user User, err error) {
 	stmt, err := r.db.PreparexContext(ctx, "SELECT * FROM users WHERE email = ?")
 	if err != nil {
+		r.logger.Errorf("prepare context error: %w", err)
 		return User{}, wrapError(err)
 	}
 
 	rows := stmt.QueryRowxContext(ctx, email)
 	if err := rows.StructScan(&user); err != nil {
+		r.logger.Errorf("scan struct error: %w", err)
 		return User{}, wrapError(err)
 	}
 

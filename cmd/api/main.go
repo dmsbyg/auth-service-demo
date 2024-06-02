@@ -11,6 +11,7 @@ import (
 	"github.com/dmsbyg/auth-service-demo/database"
 	"github.com/dmsbyg/auth-service-demo/internal/auth"
 	"github.com/dmsbyg/auth-service-demo/internal/auth/token"
+	"github.com/dmsbyg/auth-service-demo/pkg/logger"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -22,12 +23,18 @@ func main() {
 		log.Panic(err)
 	}
 
+	l, cleanup, err := logger.NewLogger(config.LoggerConfig)
+	if err != nil {
+		log.Panicf("cannot start logger: %s", err)
+	}
+	defer cleanup() //nolint
+
 	jwtMaker, err := token.NewJWTMaker(config.JWTSecret, config.JwtTokenDuration)
 	if err != nil {
 		log.Panic(err)
 	}
-	repo := auth.NewRepository(db)
-	service := auth.NewService(repo, jwtMaker)
+	repo := auth.NewRepository(db, &l)
+	service := auth.NewService(repo, jwtMaker, &l)
 	httpHandler := auth.NewHttpHandler(service)
 
 	server := &http.Server{
